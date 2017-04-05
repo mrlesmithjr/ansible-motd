@@ -1,0 +1,15 @@
+
+****************Ansible Managed MOTD****************
+{% if motd_default_message is defined %}
+{{ motd_default_message }}
+{% endif %}
+
+System Information For Hostname: {{ ansible_fqdn }}
+
+{% if motd_custom_messages is defined %}
+{%   for item in motd_custom_messages %}
+{{ item.line }}: {{ item.content }}
+{%   endfor %}
+{% endif %}
+
+************End Of Ansible Managed MOTD*************
