@@ -16,11 +16,15 @@ motd_custom_messages:
   - line: 'Interfaces'
     content: >-
              {% for int in ansible_interfaces -%}{{ int }}
+             {%- if hostvars[inventory_hostname]['ansible_'+int] is defined -%}
+             {%- if hostvars[inventory_hostname]['ansible_'+int]['ipv4'] is defined -%}
              {%- if hostvars[inventory_hostname]['ansible_'+int]['ipv4']['address'] is defined -%}
              ({{ hostvars[inventory_hostname]['ansible_'+int]['ipv4']['address'] }})
              {%- endif %}
+             {%- endif %}
              {%- if hostvars[inventory_hostname]['ansible_'+int]['macaddress'] is defined -%}
              ({{ hostvars[inventory_hostname]['ansible_'+int]['macaddress'] }})
+             {%- endif %}
              {%- endif %}
              {% endfor %}
   - line: 'Kernel'
