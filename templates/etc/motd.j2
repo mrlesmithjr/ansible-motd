@@ -14,20 +14,22 @@ DNS Search: {{ ansible_dns.search|join (" ") }}
 {% if ansible_dns.nameservers is defined %}
 DNS Server(s): {{ ansible_dns.nameservers|join (" ") }}
 {% endif %}
+{% if ansible_interfaces is defined %}
 Interfaces:
-{% for int in ansible_interfaces %}
+{%   for int in ansible_interfaces %}
     Interface: {{ int }}
-{%   if hostvars[inventory_hostname]['ansible_'+int] is defined %}
-{%     if hostvars[inventory_hostname]['ansible_'+int]['ipv4'] is defined %}
-{%       if hostvars[inventory_hostname]['ansible_'+int]['ipv4']['address'] is defined %}
+{%     if hostvars[inventory_hostname]['ansible_'+int] is defined %}
+{%       if hostvars[inventory_hostname]['ansible_'+int]['ipv4'] is defined %}
+{%         if hostvars[inventory_hostname]['ansible_'+int]['ipv4']['address'] is defined %}
       ip: {{ hostvars[inventory_hostname]['ansible_'+int]['ipv4']['address'] }}
+{%         endif %}
+{%       endif %}
+{%       if hostvars[inventory_hostname]['ansible_'+int]['macaddress'] is defined %}
+      mac: {{ hostvars[inventory_hostname]['ansible_'+int]['macaddress'] }}
 {%       endif %}
 {%     endif %}
-{%     if hostvars[inventory_hostname]['ansible_'+int]['macaddress'] is defined %}
-      mac: {{ hostvars[inventory_hostname]['ansible_'+int]['macaddress'] }}
-{%     endif %}
-{%   endif %}
-{% endfor %}
+{%   endfor %}
+{% endif %}
 Kernel: {{ ansible_kernel }}
 {% if ansible_lsb is defined %}
 LSB: {{ ansible_lsb.description }}
@@ -43,5 +45,11 @@ Mounts:
 Processors: {{ ansible_processor_vcpus }}
 Python Version: {{ ansible_python_version }}
 Timezone: {{ ansible_date_time.tz }}({{ ansible_date_time.tz_offset }})
+{% if ansible_virtualization_role is defined %}
+Virtualization Role: {{ ansible_virtualization_role }}
+{% endif %}
+{% if ansible_virtualization_type is defined %}
+Virtualization Type: {{ ansible_virtualization_type }}
+{% endif %}
 
 ************End Of Ansible Managed MOTD*************
