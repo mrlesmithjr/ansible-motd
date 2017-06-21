@@ -6,22 +6,16 @@
     dest: "/etc/motd"
   become: true
 
-# Disables all default MOTD scripts
-- name: main | Disabling All Default MOTD
-  file:
-    path: "{{ motd_default_dir }}"
-    state: "directory"
-    recurse: yes
-    mode: "u=rw,g=r,o=r"
-  become: true
-  when: motd_disable_defaults
+- include: debian.yml
+  when: ansible_os_family == "Debian"
 
-# Enables all default MOTD scripts
-- name: main | Enabling All Default MOTD
-  file:
-    path: "{{ motd_default_dir }}"
-    state: "directory"
-    recurse: yes
+- name: main | Configuring Custom MOTD Scripts
+  template:
+    src: "etc/update-motd.d/{{ item }}.j2"
+    dest: "{{ motd_default_dir }}/{{ item }}"
+    owner: "root"
+    group: "root"
     mode: "u=rwx,g=rx,o=rx"
   become: true
-  when: not motd_disable_defaults
+  with_items: '{{ motd_custom_scripts }}'
+  when: motd_enable_custom_scripts

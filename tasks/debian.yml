@@ -1,0 +1,22 @@
+---
+- name: debian | Disabling Distro Defaults
+  file:
+    path: "{{ motd_default_dir }}/{{ item }}"
+    state: "file"
+    mode: "u=rw,g=r,o=r"
+  become: true
+  with_items: '{{ motd_ubuntu_defaults }}'
+  when: >
+        motd_disable_defaults and
+        ansible_distribution == "Ubuntu"
+
+- name: debian | Enabling Distro Defaults
+  file:
+    path: "{{ motd_default_dir }}/{{ item }}"
+    state: "file"
+    mode: "u=rwx,g=rx,o=rx"
+  become: true
+  with_items: '{{ motd_ubuntu_defaults }}'
+  when: >
+        not motd_disable_defaults and
+        ansible_distribution == "Ubuntu"
