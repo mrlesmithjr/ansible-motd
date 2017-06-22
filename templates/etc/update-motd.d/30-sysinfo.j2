@@ -50,6 +50,9 @@ ips="$(for int in ${interfaces[@]};
   done
 )"
 
+# Buffer/Cache memory
+memory_buffer_cache="$(free -m | awk '($1=="Mem:"){memBufferCache=$6} END{printf "%.0fM", memBufferCache}')"
+
 # Free memory
 memory_free="$(free -m | awk '($1=="Mem:"){memFree=$4} END{printf "%.0fM", memFree}')"
 
@@ -77,6 +80,7 @@ printf "${cyan}%s\n" "${top_processes_cpu}"
 printf "\n"
 printf "${white}Memory Total          :${cyan} %s\n" "${memory_total}"
 printf "${white}Memory Free           :${cyan} %s\n" "${memory_free}"
+printf "${white}Memory Buffer/Cache   :${cyan} %s\n" "${memory_buffer_cache}"
 printf "${white}Memory Usage          :${cyan} %s\n" "${memory_usage}"
 printf "${white}Swap Usage            :${cyan} %s\n" "${swap_usage}"
 printf "\n"
