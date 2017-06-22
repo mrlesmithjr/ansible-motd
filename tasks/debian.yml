@@ -1,22 +1,32 @@
 ---
+- name: debian | Checking If Distro Defaults Exist
+  stat:
+    path: "{{ motd_default_dir }}/{{ item }}"
+  register: "_motd_ubuntu_defaults"
+  with_items: '{{ motd_ubuntu_defaults }}'
+  when: >
+        ansible_distribution == "Ubuntu"
+
 - name: debian | Disabling Distro Defaults
   file:
-    path: "{{ motd_default_dir }}/{{ item }}"
+    path: "{{ motd_default_dir }}/{{ item['item'] }}"
     state: "file"
     mode: "u=rw,g=r,o=r"
   become: true
-  with_items: '{{ motd_ubuntu_defaults }}'
+  with_items: "{{ _motd_ubuntu_defaults['results'] }}"
   when: >
-        motd_disable_defaults and
-        ansible_distribution == "Ubuntu"
+        (motd_disable_defaults and
+        ansible_distribution == "Ubuntu") and
+        item['stat']['exists']
 
 - name: debian | Enabling Distro Defaults
   file:
-    path: "{{ motd_default_dir }}/{{ item }}"
+    path: "{{ motd_default_dir }}/{{ item['item'] }}"
     state: "file"
     mode: "u=rwx,g=rx,o=rx"
   become: true
-  with_items: '{{ motd_ubuntu_defaults }}'
+  with_items: "{{ _motd_ubuntu_defaults['results'] }}"
   when: >
-        not motd_disable_defaults and
-        ansible_distribution == "Ubuntu"
+        (not motd_disable_defaults and
+        ansible_distribution == "Ubuntu") and
+        item['stat']['exists']
