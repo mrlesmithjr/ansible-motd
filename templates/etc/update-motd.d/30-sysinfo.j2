@@ -42,11 +42,14 @@ interfaces="$(ip link show | awk -F: '$1>0 {print $2}' | grep -v lo)"
 
 # Using captured interfaces loop through them and capture:
 # link state and ip address
+# Only if IP address is defined
 ips="$(for int in ${interfaces[@]};
   do
     state="$(ip link show $int | awk '{print $9}')"
     ip_addr="$(ip -4 add show $int | grep inet | awk '{print $2}'| awk -F/ '{print $1}')"
-    echo "[$int/$state]:" $ip_addr | tr '\r\n' ' '
+    if [ ! -z $ip_addr ]; then
+      echo "[$int/$state]:" $ip_addr
+    fi
   done
 )"
 
@@ -88,7 +91,9 @@ printf "\n"
 printf "${white}Disk Mounts           :\n"
 printf "${cyan}%s\n" "${disk_mounts}"
 printf "\n"
-printf "${white}IP Addresses          :${cyan} %s\n" "${ips}"
+printf "${white}IP Addresses          :\n"
+printf "${cyan}%s\n" "${ips}"
+printf "\n"
 printf "${white}DNS Servers           :${cyan} %s\n" "${dns_servers}"
 printf "${white}DNS Response Time     :${cyan} %s\n" "${dns_response}"
 
