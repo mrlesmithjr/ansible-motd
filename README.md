@@ -128,7 +128,7 @@ Timezone: EDT(-0400)
 
 ## License
 
-BSD
+MIT
 
 ## Author Information
 
