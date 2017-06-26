@@ -65,6 +65,17 @@ memory_total="$(free -m | awk '($1=="Mem:"){memTotal=$2} END{printf "%.0fM", mem
 # used memory
 memory_usage="$(free -m | awk '($1=="Mem:"){memTotal=$2} {memUsed=$3} END{printf "%.1f%%", memUsed/memTotal * 100}')"
 
+# Detect OS
+if [ -f /etc/lsb-release ]; then
+  os=$(lsb_release -s -d)
+  elif [ -f /etc/debian_version ]; then
+  os="Debian $(cat /etc/debian_version)"
+  elif [ -f /etc/redhat-release ]; then
+  os=`cat /etc/redhat-release`
+else
+  os="$(uname -s) $(uname -r)"
+fi
+
 # used swap memory
 swap_usage="$(free -m | awk '($1=="Swap:"){swapTotal=$2; swapUsed=$3} END{printf "%.1f%%", swapUsed/swapTotal * 100}')"
 
@@ -74,6 +85,8 @@ top_processes_cpu="$(ps aux k-pcpu | head -6)"
 printf "${green}System Information for $HOSTNAME on ${date}\n"
 printf "================================================================================\n"
 
+printf "${white}OS                    :${cyan} %s\n" "${os}"
+printf "\n"
 printf "${white}CPU Load              :${cyan} %s\n" "${cpu_load}"
 printf "${white}CPU Usage             :\n"
 printf "${cyan}%s\n" "${cpu_usage}"
