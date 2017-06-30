@@ -1,4 +1,12 @@
 ---
+- name: debian | Installing Pre-Reqs
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  become: true
+  with_items:
+    - 'dnsutils'
+
 - name: debian | Checking If Distro Defaults Exist
   stat:
     path: "{{ motd_default_dir }}/{{ item }}"
