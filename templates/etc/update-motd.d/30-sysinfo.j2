@@ -32,7 +32,7 @@ disk_mounts="$(df -hT | grep -Ev 'devtmpfs|tmpfs')"
 disk_usage="$(df -h | awk '{if($(NF) == "/") {print $(NF-1); exit;}}')"
 
 # Measure DNS response time
-if type dig; then
+if type dig > /dev/null 2>&1; then
   dns_response="$(dig google.com | grep 'Query time:' | awk '{print $4,$5}')"
 else
   dns_response="dig command not found, please install"
