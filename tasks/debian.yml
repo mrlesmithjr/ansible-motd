@@ -67,3 +67,14 @@
         (not motd_disable_defaults and
         ansible_distribution == "Ubuntu") and
         item['stat']['exists']
+
+- name: debian | Configuring Custom MOTD Scripts
+  template:
+    src: "etc/update-motd.d/{{ item }}.j2"
+    dest: "{{ motd_default_dir }}/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: "u=rwx,g=rx,o=rx"
+  become: true
+  with_items: '{{ motd_custom_scripts }}'
+  when: motd_enable_custom_scripts
