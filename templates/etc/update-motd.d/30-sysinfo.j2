@@ -80,6 +80,9 @@ else
   os="$(uname -s) $(uname -r)"
 fi
 
+# System uptime
+system_uptime="$(uptime | grep -ohe 'up .*' | sed 's/,//g' | awk '{ print $2" "$3 }')"
+
 # used swap memory
 swap_usage="$(free -m | awk '($1=="Swap:"){swapTotal=$2; swapUsed=$3} END{printf "%.1f%%", swapUsed/swapTotal * 100}')"
 
@@ -89,6 +92,8 @@ top_processes_cpu="$(ps aux k-pcpu | head -6)"
 printf "${green}System Information for $HOSTNAME on ${date}\n"
 printf "================================================================================\n"
 
+printf "${white}System Uptime         :${cyan} %s\n" "${system_uptime}"
+printf "\n"
 printf "${white}OS                    :${cyan} %s\n" "${os}"
 printf "\n"
 printf "${white}CPU Load              :${cyan} %s\n" "${cpu_load}"
