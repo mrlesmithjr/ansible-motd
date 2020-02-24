@@ -1,58 +1,33 @@
-# Role Name
+# ansible-motd
 
-An [Ansible] role to manage [MOTD]
+Ansible role to manage MOTD
+
+[motd](<https://en.wikipedia.org/wiki/Motd_(Unix)>)
+
+## Build Status
+
+### GitHub Actions
+
+![Molecule Test](https://github.com/mrlesmithjr/ansible-motd/workflows/Molecule%20Test/badge.svg)
+
+### Travis CI
+
+[![Build Status](https://travis-ci.org/mrlesmithjr/ansible-motd.svg?branch=master)](https://travis-ci.org/mrlesmithjr/ansible-motd)
 
 ## Requirements
 
-None
+For any required Ansible roles, review:
+[requirements.yml](requirements.yml)
 
 ## Role Variables
 
-```yaml
----
-# defaults file for ansible-motd
-
-# Define custom scripts to install
-motd_custom_scripts:
-  - '30-sysinfo'
-
-# Defines default directory for MOTD scripts
-motd_default_dir: '/etc/update-motd.d'
-
-# Defines a default message to apply above any custom messages
-motd_default_message: ''
-
-# Defines if all default MOTD scripts in motd_default_dir should be disabled
-motd_disable_defaults: true
-
-# Defines if custom motd script(s) are enabled
-motd_enable_custom_scripts: true
-
-# Defines if static configured motd info using Ansible facts is enabled
-motd_static: false
-
-# Defines default Ubuntu scripts
-motd_ubuntu_defaults:
-  - '00-header'
-  - '10-help-text'
-  - '91-release-upgrade'
-```
+[defaults/main.yml](defaults/main.yml)
 
 ## Dependencies
 
-None
-
 ## Example Playbook
 
-```yaml
----
-- hosts: all
-  become: true
-  vars:
-  roles:
-    - role: ansible-motd
-  tasks:
-```
+[playbook.yml](playbook.yml)
 
 ## Example MOTD
 
@@ -134,10 +109,8 @@ MIT
 
 Larry Smith Jr.
 
--   @mrlesmithjr
--   <http://everythingshouldbevirtual.com>
--   mrlesmithjr [at] gmail.com
+- [@mrlesmithjr](https://twitter.com/mrlesmithjr)
+- [mrlesmithjr@gmail.com](mailto:mrlesmithjr@gmail.com)
+- [http://everythingshouldbevirtual.com](http://everythingshouldbevirtual.com)
 
-[ansible]: https://www.ansible.com
-
-[motd]: https://en.wikipedia.org/wiki/Motd_(Unix)
+> NOTE: Repo has been created/updated using [https://github.com/mrlesmithjr/cookiecutter-ansible-role](https://github.com/mrlesmithjr/cookiecutter-ansible-role) as a template.
