@@ -3,13 +3,13 @@
 
 # Define custom scripts to install
 motd_custom_scripts:
-  - '30-sysinfo'
+  - 30-sysinfo
 
 # Defines default directory for MOTD scripts
-motd_default_dir: '/etc/update-motd.d'
+motd_default_dir: /etc/update-motd.d
 
 # Defines a default message to apply above any custom messages
-motd_default_message: ''
+motd_default_message: ""
 
 # Defines if all default MOTD scripts in motd_default_dir should be disabled
 motd_disable_defaults: true
@@ -22,6 +22,6 @@ motd_static: false
 
 # Defines default Ubuntu scripts
 motd_ubuntu_defaults:
-  - '00-header'
-  - '10-help-text'
-  - '91-release-upgrade'
+  - 00-header
+  - 10-help-text
+  - 91-release-upgrade
