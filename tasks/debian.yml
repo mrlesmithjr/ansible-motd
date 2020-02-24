@@ -4,18 +4,18 @@
     path: "{{ motd_default_dir }}"
     state: "directory"
   become: true
-  when: >
-        ansible_distribution == "Debian" and
-        ansible_distribution_version|version_compare('9.0', '<')
+  when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_version is version('9.0', '<')
 
 - name: debian | Removing /etc/motd
   file:
     path: "/etc/motd"
     state: "absent"
   become: true
-  when: >
-        ansible_distribution == "Debian" and
-        ansible_distribution_version|version_compare('9.0', '<')
+  when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_version is version('9.0', '<')
 
 - name: debian | Creating symlink for /etc/motd
   file:
@@ -24,25 +24,26 @@
     state: "link"
     force: true
   become: true
-  when: >
-        ansible_distribution == "Debian" and
-        ansible_distribution_version|version_compare('9.0', '<')
+  when:
+    - ansible_distribution == "Debian"
+    - ansible_distribution_version is version('9.0', '<')
 
 - name: debian | Installing Pre-Reqs
   apt:
-    name: "{{ item }}"
+    name:
+      - dnsutils
     state: "present"
   become: true
-  with_items:
-    - 'dnsutils'
+  register: result
+  until: result is successful
 
 - name: debian | Checking If Distro Defaults Exist
   stat:
     path: "{{ motd_default_dir }}/{{ item }}"
   register: "_motd_ubuntu_defaults"
-  with_items: '{{ motd_ubuntu_defaults }}'
-  when: >
-        ansible_distribution == "Ubuntu"
+  with_items: "{{ motd_ubuntu_defaults }}"
+  when:
+    - ansible_distribution == "Ubuntu"
 
 - name: debian | Disabling Distro Defaults
   file:
@@ -52,9 +53,9 @@
   become: true
   with_items: "{{ _motd_ubuntu_defaults['results'] }}"
   when: >
-        (motd_disable_defaults and
-        ansible_distribution == "Ubuntu") and
-        item['stat']['exists']
+    (motd_disable_defaults and
+    ansible_distribution == "Ubuntu") and
+    item['stat']['exists']
 
 - name: debian | Enabling Distro Defaults
   file:
@@ -63,10 +64,10 @@
     mode: "u=rwx,g=rx,o=rx"
   become: true
   with_items: "{{ _motd_ubuntu_defaults['results'] }}"
-  when: >
-        (not motd_disable_defaults and
-        ansible_distribution == "Ubuntu") and
-        item['stat']['exists']
+  when:
+    - not motd_disable_defaults|bool
+    - ansible_distribution == "Ubuntu"
+    - item['stat']['exists']|bool
 
 - name: debian | Configuring Custom MOTD Scripts
   template:
@@ -76,5 +77,5 @@
     group: "root"
     mode: "u=rwx,g=rx,o=rx"
   become: true
-  with_items: '{{ motd_custom_scripts }}'
-  when: motd_enable_custom_scripts
+  with_items: "{{ motd_custom_scripts }}"
+  when: motd_enable_custom_scripts|bool
