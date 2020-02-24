@@ -13,7 +13,7 @@
   dnf:
     name:
       - bind-utils
-      - libselinux-python
+      # - libselinux-python
     state: present
   become: true
   register: results
