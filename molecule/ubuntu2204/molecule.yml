@@ -1,0 +1,24 @@
+---
+dependency:
+  name: galaxy
+  enabled: false
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: ubuntu2204
+    image: mrlesmithjr/ubuntu:22.04
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+    converge: ../shared/converge.yml
+    verify: ../shared/verify.yml
+verifier:
+  name: ansible

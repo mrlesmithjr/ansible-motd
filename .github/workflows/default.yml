@@ -17,30 +17,34 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.5, 3.6, 3.7]
+        python-version: ["3.11"]
 
     steps:
-      - uses: actions/checkout@v1
-        with:
-          path: ansible-motd
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          sudo apt install docker
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
+          pip install -r requirements.txt
           ansible --version
           molecule --version
       - name: Test with molecule
         run: |
-          molecule test --scenario-name centos7
+          molecule test --scenario-name ubuntu2204
+          # The following scenarios target EOL distros with dead package
+          # mirrors (centos7/centos8/debian8/debian9/debian10/ubuntu1604) or
+          # an unpinned/rolling image with no arm64 manifest and an
+          # unverified target-Python story (fedora), and ubuntu1804's
+          # target Python (3.6) is incompatible with modern ansible-core.
+          # Left in molecule/ for reference; see issue for follow-up.
+          # molecule test --scenario-name centos7
           # molecule test --scenario-name centos8
           # molecule test --scenario-name debian8
-          molecule test --scenario-name debian9
-          molecule test --scenario-name debian10
-          molecule test --scenario-name fedora
-          molecule test --scenario-name ubuntu1604
-          molecule test --scenario-name ubuntu1804
+          # molecule test --scenario-name debian9
+          # molecule test --scenario-name debian10
+          # molecule test --scenario-name fedora
+          # molecule test --scenario-name ubuntu1604
+          # molecule test --scenario-name ubuntu1804

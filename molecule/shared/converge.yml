@@ -4,4 +4,4 @@
   tasks:
     - name: Include ansible-motd
       include_role:
-        name: ansible-motd
+        name: mrlesmithjr.motd
